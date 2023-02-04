@@ -1,9 +1,9 @@
 import { LOGIN_START, LOGIN_SUCCESS, LOGIN_FAILED } from "../redux/actions";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "../contants";
+import { ACCESS_TOKEN, REFRESH_TOKEN, URL_BE } from "../contants";
 
-axios.defaults.baseURL = "http://localhost:8080/v1/api";
+axios.defaults.baseURL = URL_BE + "v1/api";
 
 export const login = (userInfo, navigate) => async (dispatch) => {
     dispatch({

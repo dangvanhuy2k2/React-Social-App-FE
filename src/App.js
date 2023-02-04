@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ModalCall from "./components/modalCall/ModalCall";
 
 import { publicRoutes, privateRoutes } from "./routes";
+import { URL_SOCKET } from "./contants";
 
 function App() {
     const { firstConnect, socket, firstGetData, usersOnline } = useSelector(
@@ -59,7 +60,6 @@ function App() {
         const peer = new Peer(undefined, {
             host: "/",
             port: 9000,
-            // path: "/",
         });
 
         dispatch({ type: SET_PEER, payload: peer });
@@ -124,7 +124,7 @@ function App() {
         if (firstConnect && userCurrent) {
             dispatch({
                 type: SET_SOCKET,
-                payload: io("ws://localhost:8900"),
+                payload: io(URL_SOCKET),
             });
         }
     }, [userCurrent]);

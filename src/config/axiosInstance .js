@@ -2,10 +2,10 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 import jwt_decode from "jwt-decode";
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "../contants";
+import { ACCESS_TOKEN, REFRESH_TOKEN, URL_BE } from "../contants";
 
 const instance = axios.create({
-    baseURL: "http://localhost:8080/v1/api",
+    baseURL: URL_BE + "v1/api",
 });
 
 
@@ -28,10 +28,7 @@ const handleRefreshToken = async () => {
     try {
         let refreshToken = getToken(REFRESH_TOKEN);
         if (isTimeExpire(refreshToken)) throw new Error("Refresh token invalid");
-        const response = await axios.post(
-            "http://localhost:8080/v1/api/auth/refresh-token",
-            { refreshToken }
-        );
+        const response = await axios.post("/auth/refresh-token", { refreshToken });
         return response;
     } catch (err) {
         throw err;
