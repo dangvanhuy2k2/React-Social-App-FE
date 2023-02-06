@@ -218,10 +218,10 @@
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
-    // background-color: red;
     height: 250px;
     position: relative;
     cursor: pointer;
+    z-index: -1;
 
     &:hover div {
       transform: translateY(0);

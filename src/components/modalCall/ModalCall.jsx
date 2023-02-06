@@ -39,7 +39,7 @@ const CallModal = () => {
   const { socket } = useSelector((state) => state.network);
   const peer = useSelector((state) => state.peer);
   const { userCurrent } = useSelector((state) => state.auth);
-
+  console.log(peer, socket);
   const dispatch = useDispatch();
 
   // Set Time
@@ -171,7 +171,6 @@ const CallModal = () => {
     if (isAnswer) {
       setTotal(0);
     } else {
-
       const timerId = setTimeout(() => {
         if (isSenderCall) {
           socket?.emit("userCallNoReaction", {

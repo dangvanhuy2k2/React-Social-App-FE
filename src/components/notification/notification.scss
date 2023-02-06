@@ -8,18 +8,15 @@ $black: #201c29;
 $white: #e6e6e6;
 $secondary: #6fa57f;
 
-body {
-  background: $main-color;
-}
-
 .frame {
+  background-color: $main-color;
+  z-index: 10;
   position: absolute;
   right: 0;
   width: 400px;
   height: 500px;
   border-radius: 2px;
   box-shadow: 0.5rem 0.5rem 1rem rgba(0, 0, 0, 0.6);
-  background: $black;
   color: #666;
   font-family: "montserrat alternates", sans-serif;
   -webkit-font-smoothing: antialiased;

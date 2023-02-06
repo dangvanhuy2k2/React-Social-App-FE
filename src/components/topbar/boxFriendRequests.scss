@@ -1,5 +1,5 @@
 .boxFriendRequest {
-  // max-height: 400px;
+  z-index: 10;
   height: 500px;
   overflow-y: auto;
   width: 400px;
@@ -16,7 +16,6 @@
   );
   .title {
     margin: 5px 0 10px;
-
   }
   .button-options {
     margin: 5px 0 15px;

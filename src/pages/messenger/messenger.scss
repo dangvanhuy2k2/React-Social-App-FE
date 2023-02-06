@@ -15,6 +15,7 @@ $colorUnRead: #2d7ee7;
 }
 
 .center {
+  z-index: 10;
   position: absolute;
   transform: translateY(100%);
   right: -86px;
@@ -215,7 +216,6 @@ $colorUnRead: #2d7ee7;
 
   width: 22rem;
   height: 33rem;
-  z-index: 2;
   box-sizing: border-box;
   border-radius: 1rem;
 
