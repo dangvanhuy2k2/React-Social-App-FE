@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
 import { PermMedia } from "@material-ui/icons";
-import Displayimg from "../displayimg/DisplayImg";
+import React, { useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { useSelector } from "react-redux";
+import Displayimg from "../displayimg/DisplayImg";
+import "./ChooseImage.scss";
 
 const ChooseImage = ({
   setIsTakePhoto,

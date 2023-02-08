@@ -1,13 +1,8 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  END_CALL,
-  SET_IS_ANSWER,
-  SET_USER_STREAM,
-  SET_USER_STREAMs,
-} from "../../redux/actions";
-import Avatar from "../avatar/Avatar";
 import { addVideoStream, openStream } from "../../helpers/media";
+import { END_CALL, SET_IS_ANSWER, SET_USER_STREAM } from "../../redux/actions";
+import Avatar from "../avatar/Avatar";
 
 const ModalCreateCall = () => {
   const { socket } = useSelector((state) => state.network);

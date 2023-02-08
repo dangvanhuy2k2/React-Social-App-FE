@@ -25,7 +25,7 @@ const FriendRequest = ({ friendRequest }) => {
         }
         const response = await getDataAPI(`/user?userId=${id}`);
 
-        const { message, user } = response;
+        const { user } = response;
 
         if (isMount) setUser(user);
       } catch (err) {

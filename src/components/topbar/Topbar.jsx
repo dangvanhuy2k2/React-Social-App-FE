@@ -1,42 +1,26 @@
-import "./topbar.scss";
-import { Search, Person } from "@material-ui/icons";
-import { Link } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
-import { toast } from "react-toastify";
-import { debounce } from "../../helpers/debounceFunction";
-import { getDataAPI } from "../../api/fetchData";
-import Avatar from "../avatar/Avatar";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { getDataAPI } from "../../api/fetchData";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../contants";
 import {
-  SET_STATUS_CONVERSATION,
   INCREASE_NUMBER_FRIEND_REQUEST,
   SET_NUMBER_FRIEND_REQUEST,
+  SET_STATUS_CONVERSATION,
   USER_LOGOUT,
-  RESET_NETWORK,
-  SET_PEER,
 } from "../../redux/actions";
-import BoxFriendRequests from "./BoxFriendRequests";
 import IconMessage from "./IconMessage";
 import IconNotifycation from "./IconNotifycation";
+import IconPerson from "./IconPerson";
+import SeachUser from "./SeachUser";
+import "./topbar.scss";
 
 export default function Topbar() {
   const [notifications, setNotifications] = useState([]);
-  const [isShowNotification, setIsShowNotification] = useState(false);
   const [firstShowNotification, setFirstShowNotification] = useState(false);
-  const [usersSearch, setUsersSearch] = useState();
-  const [isShowUsersSearch, setIsShowUsersSearch] = useState(false);
-  const [isShowFriendRequests, setIsShowFriendRequests] = useState(false);
 
   const { socket } = useSelector((state) => state.network);
   const { userCurrent } = useSelector((state) => state.auth);
-  const { isChat, statusConversations } = useSelector((state) => state.chat);
-  const { number: numberFriendRequest } = useSelector(
-    (state) => state.friendRequest
-  );
-
-  const searchInputRef = useRef();
-  const displayUsersSearchRef = useRef();
 
   const dispatch = useDispatch();
 
@@ -49,7 +33,7 @@ export default function Topbar() {
       try {
         const response = await getDataAPI(`/friend-request/get-number`);
 
-        const { message, number } = response;
+        const { number } = response;
 
         if (isMount) {
           dispatch({
@@ -82,22 +66,6 @@ export default function Topbar() {
   }, [socket]);
 
   useEffect(() => {
-    const handleCloseSearchUsers = (e) => {
-      if (
-        e.target !== displayUsersSearchRef.current &&
-        e.target !== searchInputRef.current
-      ) {
-        setIsShowUsersSearch(false);
-      }
-    };
-    document.body.addEventListener("click", handleCloseSearchUsers);
-
-    return () => {
-      document.body.removeEventListener("click", handleCloseSearchUsers);
-    };
-  }, [displayUsersSearchRef?.current]);
-
-  useEffect(() => {
     let isMount = true;
 
     const handleUpdateNotification = ({ notification }) => {
@@ -127,7 +95,7 @@ export default function Topbar() {
             `/conversation/get-status-conversation`
           );
 
-          const { message, conversations } = response;
+          const { conversations } = response;
 
           dispatch({
             type: SET_STATUS_CONVERSATION,
@@ -143,45 +111,13 @@ export default function Topbar() {
     return () => (isMount = false);
   }, [userCurrent]);
 
-  const handleSearchUsers = async () => {
-    if (!searchInputRef?.current?.value) {
-      return;
-    }
-
-    try {
-      const response = await getDataAPI(
-        `/user/search-user/${searchInputRef.current.value}`
-      );
-
-      const { message, users } = response;
-
-      toast.success(message, { autoClose: 1000 });
-
-      if (users.length) {
-        setIsShowUsersSearch(true);
-        setUsersSearch(users);
-      }
-
-      toast.success(message, { autoClose: 1000 });
-    } catch (err) {
-      console.log("err", err);
-    }
-  };
-
   const logOut = () => {
     dispatch({
       type: USER_LOGOUT,
     });
-    dispatch({
-      type: RESET_NETWORK,
-    });
-    dispatch({
-      type: SET_PEER,
-      payload: null,
-    });
 
-    localStorage.setItem("refresh-token", "");
-    localStorage.setItem("access-token", "");
+    localStorage.setItem(REFRESH_TOKEN, "");
+    localStorage.setItem(ACCESS_TOKEN, "");
 
     localStorage.setItem("userId", "");
 
@@ -197,33 +133,7 @@ export default function Topbar() {
         </Link>
       </div>
       <div className="topbarCenter">
-        <div className="searchbar">
-          <Search className="searchIcon" />
-          <input
-            ref={searchInputRef}
-            placeholder="Search for friend, post or video"
-            className="searchInput"
-            onFocus={() => {
-              if (!isShowUsersSearch) setIsShowUsersSearch(true);
-            }}
-            onChange={debounce(handleSearchUsers, 2000)}
-          />
-
-          {usersSearch && isShowUsersSearch && (
-            <div className="displayUsersSearch" ref={displayUsersSearchRef}>
-              {usersSearch.map((user) => (
-                <div
-                  className="userSearchContainer"
-                  key={user?._id}
-                  onClick={() => navigate(`/profile/${user?._id}`)}
-                >
-                  <Avatar user={user} />
-                  <span>{user?.userName}</span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        <SeachUser />
       </div>
       <div className="topbarRight">
         <div className="topbarLinks">
@@ -232,9 +142,7 @@ export default function Topbar() {
         </div>
         <div className="topbarIcons">
           <div className="topbarIconItem">
-            <Person onClick={() => setIsShowFriendRequests((prev) => !prev)} />
-            {isShowFriendRequests && <BoxFriendRequests />}
-            <span className="topbarIconBadge">{numberFriendRequest}</span>
+            <IconPerson />
           </div>
           <div className="topbarIconItem">
             <IconMessage />

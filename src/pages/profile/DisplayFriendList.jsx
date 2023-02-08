@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import "slick-carousel/slick/slick-theme.css";
 import { getDataAPI } from "../../api/fetchData";
-import { NO_AVATAR } from "../../contants/imgContant";
-import "./displayFriendList.scss";
 import Carousel from "../../components/Carousel/Carousel";
+import { PUBLIC_FOLDER } from "../../contants";
+import "./displayFriendList.scss";
 
 const DisplayFriendList = () => {
   const [friendList, setFriendList] = useState([]);
@@ -21,9 +23,7 @@ const DisplayFriendList = () => {
             `/user/get-friends/${userProfile?._id}`
           );
 
-          const { message, friends } = response;
-          // toast.success(message, { autoClose: 2000 });
-
+          const { friends } = response;
           if (isMount) {
             setFriendList(friends);
           }
@@ -36,12 +36,16 @@ const DisplayFriendList = () => {
 
     return () => (isMount = false);
   }, [userProfile?._id, userCurrent]);
+  const navigate = useNavigate();
 
   return (
     <div className="row friend-container">
-      <Carousel>
+      <Carousel length={friendList.length}>
         {friendList.map((friend) => (
-          <div key={friend?._id} >
+          <div
+            key={friend?._id}
+            onClick={() => navigate(`/profile/${friend?._id}`)}
+          >
             <div className="our-friend">
               <div className="picture">
                 <img
@@ -49,7 +53,7 @@ const DisplayFriendList = () => {
                   src={
                     (friend?.profilePicture?.length &&
                       friend?.profilePicture[0]) ||
-                    NO_AVATAR
+                    PUBLIC_FOLDER + "no-avatar.png"
                   }
                 />
               </div>

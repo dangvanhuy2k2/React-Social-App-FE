@@ -1,11 +1,10 @@
 import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import Slider from "react-slick";
 import { getDataAPI } from "../../api/fetchData";
 import { SET_FRIEND_INVITES } from "../../redux/actions";
 import CardFriend from "./CardFriend";
-import Carousel from "../Carousel/Carousel";
 import "./InviteFriend.scss";
-import Slider from "react-slick";
 
 const InviteFriend = () => {
   const { userCall, isAnswer, fristLoadFriends, friendInvites } = useSelector(

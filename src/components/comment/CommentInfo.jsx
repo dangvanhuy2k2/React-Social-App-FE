@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
-import "./commentInfo.css";
-import { toast } from "react-toastify";
-import DisplayImg from "../displayimg/DisplayImg";
 import { PermMedia } from "@material-ui/icons";
-import { putDataAPI } from "../../api/fetchData";
-import { v4 as uuidv4 } from "uuid";
-import { removeImage, imageUpload } from "../../helpers/image";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { v4 as uuidv4 } from "uuid";
+import { putDataAPI } from "../../api/fetchData";
+import { imageUpload, removeImage } from "../../helpers/image";
+import DisplayImg from "../displayimg/DisplayImg";
+import "./commentInfo.css";
 
 const CommentInfo = ({
   post,
@@ -61,7 +61,6 @@ const CommentInfo = ({
       );
 
       const { message, newComment } = response;
-      console.log("newComment", newComment);
 
       toast.success(message, { autoClose: 2000 });
 
@@ -177,6 +176,7 @@ const CommentInfo = ({
           <div className="commentInfoImgContainer">
             {comment.images.map((image, idx) => (
               <img
+                alt={"link anh"}
                 className="commentInfoImg"
                 key={image.url}
                 style={{

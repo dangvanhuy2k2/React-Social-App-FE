@@ -1,9 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { STORE_IMG, NO_AVATAR } from "../../contants/imgContant";
-import * as timeago from "timeago.js";
-import CommentReply from "../commentReply/CommentReply";
-import CreateComment from "../form/createComment/CreateComment";
 
 const CommentAction = ({ type, user }) => {
   return (

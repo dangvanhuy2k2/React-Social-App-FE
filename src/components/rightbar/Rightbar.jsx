@@ -1,14 +1,13 @@
-import "./rightbar.css";
-import Friend from "../friend/Friend";
-import { useEffect, useState } from "react";
-import { STORE_IMG, NO_AVATAR } from "../../contants/imgContant";
-import { Link } from "react-router-dom";
 import { Add, Remove } from "@material-ui/icons";
-import { getDataAPI, putDataAPI } from "../../api/fetchData";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { UN_FOLLOW, FOLLOW } from "../../redux/actions";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import moment from "moment";
+import { getDataAPI, putDataAPI } from "../../api/fetchData";
+import { PUBLIC_FOLDER } from "../../contants";
+import { FOLLOW, UN_FOLLOW } from "../../redux/actions";
+import Friend from "../friend/Friend";
+import "./rightbar.css";
 
 export default function Rightbar({ user }) {
   const [friendList, setFriendList] = useState([]);
@@ -144,10 +143,14 @@ export default function Rightbar({ user }) {
     return (
       <>
         <div className="birthdayContainer">
-          <img className="birthdayImg" src={STORE_IMG + "gift.png"} alt="" />
+          <img
+            className="birthdayImg"
+            src={PUBLIC_FOLDER + "gift.png"}
+            alt=""
+          />
           <span className="birthdayText"></span>
         </div>
-        <img className="rightbarAd" src={STORE_IMG + "ad.png"} alt="" />
+        <img className="rightbarAd" src={PUBLIC_FOLDER + "social.png"} alt="" />
         <h4 className="rightbarTitle">Friends</h4>
         <ul className="rightbarFriendList">
           {friendList.map((friend) => (
@@ -197,7 +200,7 @@ export default function Rightbar({ user }) {
                   src={
                     (friend?.profilePicture?.length &&
                       friend?.profilePicture[0]) ||
-                    NO_AVATAR
+                    PUBLIC_FOLDER + "no-avatar.png"
                   }
                   alt=""
                   className="rightbarFollowingImg"

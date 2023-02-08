@@ -1,21 +1,18 @@
 import { getDataAPI, postDataAPI } from "../../api/fetchData";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import Typing from "./Typing";
-import DisplayMessage from "./DisplayMessage";
-import CreateMessage from "./CreateMessage";
 import Call from "./Call";
+import CreateMessage from "./CreateMessage";
+import DisplayMessage from "./DisplayMessage";
+import Typing from "./Typing";
 
-import {
-  SET_FILES,
-  UPDATE_LAST_MESSAGE,
-} from "../../redux/actions";
+import { SET_FILES, UPDATE_LAST_MESSAGE } from "../../redux/actions";
 
-
+import MessagePretty from "../../components/MessagePretty/MessagePretty";
+import { addElment, displayName } from "../../helpers";
 import { imageUpload } from "../../helpers/image";
-import { addElment } from "../../helpers";
 
 const ChatRoom = () => {
   const [messages, setMessages] = useState([]);
@@ -120,10 +117,6 @@ const ChatRoom = () => {
           isRead: true,
         });
 
-        console.log('nhan duoc tin nhan')
-
-        // setArrivalMessage(newMessage);
-
         setMessages(
           (prev) =>
             addElment(prev, newMessage, (array, newMessage) =>
@@ -151,8 +144,6 @@ const ChatRoom = () => {
       );
 
       const { message } = response;
-
-      // toast.success(message, { autoClose: 2000 });
     } catch (err) {
       console.log("err", err);
     }
@@ -224,14 +215,9 @@ const ChatRoom = () => {
                 ))}
             </div>
             <div className="contact-info">
-              <div className="name">{conversationChat.nameConversation}</div>
-              {/* <div className="seen">
-                {userCurrent?.friends.includes(friendChat?._id)
-                  ? isOnline
-                    ? "Active"
-                    : "Active " + time + " ago"
-                  : ""}
-              </div> */}
+              <div className="name">
+                {displayName(conversationChat.nameConversation)}
+              </div>
             </div>
             <Call />
           </>
@@ -248,7 +234,7 @@ const ChatRoom = () => {
             {hasTyping && <Typing />}
           </div>
         ) : (
-          <div className="noMes">Chon ban de chat</div>
+          <MessagePretty mess="Chọn Bạn Để Chat" />
         )}
       </div>
       <CreateMessage createNewMessage={createNewMessage} />

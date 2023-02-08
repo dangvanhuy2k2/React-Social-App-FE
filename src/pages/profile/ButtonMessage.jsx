@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
-import {
-  ADD_CONVERSATION,
-  ADD_CONVERSATION_ACCEPTS,
-  ADD_STATUS_CONVERSATION,
-  SET_CHAT,
-  SET_CONVERSATION_CHAT,
-  SET_NEW_CONVERSATION_CHAT,
-} from "../../redux/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { getDataAPI } from "../../api/fetchData";
+import {
+  ADD_CONVERSATION,
+  SET_CHAT,
+  SET_NEW_CONVERSATION_CHAT,
+} from "../../redux/actions";
 
 const ButtonMessage = () => {
   const [isClick, setIsClick] = useState(false);
@@ -58,7 +55,7 @@ const ButtonMessage = () => {
 
   return (
     <button
-      className="card__action__button card__action--message"
+      className="card__action__button card__action--message messSkip"
       onClick={() => {
         setIsClick(true);
         dispatch({

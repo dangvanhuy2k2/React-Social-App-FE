@@ -3,6 +3,10 @@ export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_START = "LOGIN_START";
 export const LOGIN_FAILED = "LOGIN_FAILED";
 
+
+export const LOADING_START = "LOADING_START";
+export const LOADING_END = "LOADING_END";
+
 // user
 export const UPDATE_USER = "UPDATE_USER";
 export const UN_FOLLOW = "UN_FOLLOW";

@@ -1,38 +1,69 @@
-import "./register.css";
+import { CircularProgress } from "@material-ui/core";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { register } from "../../api/authApi";
-import { useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import ShowError from "../../components/ShowError/ShowError";
+import { checkMinLength, isEmail } from "../../helpers";
 import { generateKeywords } from "../../helpers/createKeyUser";
+import "./register.css";
+
+const initValue = {
+  userName: "",
+  password: "",
+  passwordAgain: "",
+  email: "",
+};
 
 export default function Register() {
-  const emailRef = useRef();
-  const passwordRef = useRef();
-  const userNameRef = useRef();
-  const passwordAgainRef = useRef();
-
+  const [infoRegister, setInfoRegister] = useState({ ...initValue });
+  const [errors, setErrors] = useState({ ...initValue });
+  const { isLoading } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const handleChangeInput = (e) => {
+    const { name, value } = e.target;
+    setInfoRegister({ ...infoRegister, [name]: value });
+    setErrors({ ...errors, [name]: "" });
+  };
   const navigate = useNavigate();
-
-  // const { user, isLoading, error, dispatch } = useSelector((state) => state.network);
 
   const handleRegister = (e) => {
     e.preventDefault();
+    let isValid = true;
 
-    if (passwordRef.current.value !== passwordAgainRef.current.value) {
-      passwordAgainRef.current.setCustomValidity("Password don't match");
-    } else {
-      const keys = generateKeywords(userNameRef.current.value);
-
-      register(
-        {
-          email: emailRef.current.value,
-          password: passwordRef.current.value,
-          userName: userNameRef.current.value,
-          keys,
-        },
-        navigate
-      );
+    let newErrors = { ...errors };
+    if (!isEmail(infoRegister.email)) {
+      isValid = false;
+      newErrors.email = "Please enter the correct email format";
     }
+    let message;
+    message = checkMinLength(infoRegister.userName, "User name", 6);
+    if (message) {
+      isValid = false;
+      newErrors.userName = message;
+    }
+
+    message = checkMinLength(infoRegister.password, "Password", 6);
+    if (message) {
+      isValid = false;
+      newErrors.password = message;
+    }
+
+    if (infoRegister.password !== infoRegister.passwordAgain) {
+      newErrors.passwordAgain = "Passwords do not match";
+      isValid = false;
+    }
+    if (!isValid) {
+      setErrors(newErrors);
+      toast.warn("Please check registration information again", {
+        autoClose: 500,
+      });
+      return;
+    }
+
+    infoRegister.keys = generateKeywords(infoRegister.userName);
+    dispatch(register(infoRegister, navigate));
   };
 
   return (
@@ -48,34 +79,50 @@ export default function Register() {
           <form className="registerBox" onSubmit={handleRegister}>
             <input
               required
-              ref={userNameRef}
+              minLength={"6"}
+              maxLength={"20"}
+              name="userName"
+              value={infoRegister.userName}
+              onChange={handleChangeInput}
               placeholder="Username"
               className="registerInput"
             />
+            <ShowError err={errors.userName}></ShowError>
             <input
               required
-              ref={emailRef}
+              name="email"
+              value={infoRegister.email}
+              onChange={handleChangeInput}
               placeholder="Email"
               type="email"
               className="registerInput"
             />
+            <ShowError err={errors.email}></ShowError>
             <input
               type="password"
               minLength={"6"}
               required
-              ref={passwordRef}
+              name="password"
+              value={infoRegister.password}
+              onChange={handleChangeInput}
               placeholder="Password"
               className="registerInput"
             />
+            <ShowError err={errors.password}></ShowError>
             <input
               type="password"
               minLength={"6"}
               required
-              ref={passwordAgainRef}
+              name="passwordAgain"
+              value={infoRegister.passwordAgain}
+              onChange={handleChangeInput}
               placeholder="Password Again"
               className="registerInput"
             />
-            <button className="registerButton">Sign Up</button>
+            <ShowError err={errors.passwordAgain}></ShowError>
+            <button className="registerButton">
+              {isLoading ? <CircularProgress color={"primary"} /> : "Register"}
+            </button>
             <Link
               to={"/login"}
               style={{
@@ -83,8 +130,12 @@ export default function Register() {
                 justifyContent: "center",
               }}
             >
-              <button className="registerRegisterButton">
-                Log into Account
+              <button className="redirectButton">
+                {isLoading ? (
+                  <CircularProgress color={"primary"} />
+                ) : (
+                  "Log into Account"
+                )}
               </button>
             </Link>
           </form>

@@ -33,13 +33,11 @@ const ButtonActionsFriendRequest = ({ friendRequest, user }) => {
           payload: friendRequest?._id,
         });
 
-        const responseCreateNotification = await postDataAPI("/notification", {
+        await postDataAPI("/notification", {
           link: "",
           userId: user?._id,
           text: userCurrent?.userName + " has accepted your friend request",
         });
-
-        const { notification } = responseCreateNotification;
 
         // socket?.emit("acceptFriendRequest", {
         //   friendId: user?._id,

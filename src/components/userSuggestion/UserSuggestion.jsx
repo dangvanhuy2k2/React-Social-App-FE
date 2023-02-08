@@ -1,7 +1,6 @@
-import "./userSuggestion.css";
-import { NO_AVATAR } from "../../contants/imgContant";
 import { Link } from "react-router-dom";
-
+import { PUBLIC_FOLDER } from "../../contants";
+import "./userSuggestion.css";
 export default function UserSuggestion({ user }) {
   return (
     <Link
@@ -15,9 +14,8 @@ export default function UserSuggestion({ user }) {
         <img
           className="sidebarFriendImg"
           src={
-            user?.profilePicture?.length &&
-            user?.profilePicture[0]  ||
-            NO_AVATAR
+            (user?.profilePicture?.length && user?.profilePicture[0]) ||
+            PUBLIC_FOLDER + "no-avatar.png"
           }
           alt=""
         />

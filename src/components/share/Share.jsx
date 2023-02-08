@@ -1,16 +1,14 @@
-import "./share.css";
-import { PermMedia, Label, Room, EmojiEmotions } from "@material-ui/icons";
-import { useState, useRef } from "react";
-import { NO_AVATAR } from "../../contants/imgContant";
-import { toast } from "react-toastify";
-import DisplayImg from "../displayimg/DisplayImg";
-import { Link } from "react-router-dom";
-import { postDataAPI } from "../../api/fetchData";
+import { EmojiEmotions, Label, PermMedia, Room } from "@material-ui/icons";
+import { useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import ModalChooseImage from "../modal/ModalChooseImage";
+import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
+import { postDataAPI } from "../../api/fetchData";
 import { imageUpload } from "../../helpers/image";
 import Avatar from "../avatar/Avatar";
+import DisplayImg from "../displayimg/DisplayImg";
+import ModalChooseImage from "../modal/ModalChooseImage";
+import "./share.css";
 
 export default function Share({ setPosts }) {
   const { socket } = useSelector((state) => state.network);

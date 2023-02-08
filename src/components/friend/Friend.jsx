@@ -1,9 +1,6 @@
-import "./friend.scss";
-import { toast } from "react-toastify";
-import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import Avatar from "../avatar/Avatar";
-import useCheckOnline from "../../hooks/useCheckOnline";
+import "./friend.scss";
 
 export default function Friend({ friend }) {
   return (

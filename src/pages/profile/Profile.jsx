@@ -1,33 +1,28 @@
-import "./profile.scss";
-import Topbar from "../../components/topbar/Topbar";
-import Sidebar from "../../components/sidebar/Sidebar";
-import Feed from "../../components/feed/Feed";
-import ProfileRight from "./ProfileRight";
-import ProflieLeft from "./ProfileLeft";
-import Rightbar from "../../components/rightbar/Rightbar";
-import { useNavigate, useParams } from "react-router-dom";
-import { useState, useEffect, useRef, useMemo } from "react";
-import { getDataAPI, patchDataAPI } from "../../api/fetchData";
-import { useSelector, useDispatch } from "react-redux";
-import UpdateImage from "../../components/UpdateImage/UpdateImage.jsx";
+import { useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
+import { getDataAPI, patchDataAPI } from "../../api/fetchData";
 import ModalChooseImage from "../../components/modal/ModalChooseImage";
-import {
-  UPDATE_BACKGROUND_USER,
-  UPDATE_AVATAR_USER,
-  UPDATE_USER,
-  SET_USER_PROFILE,
-  SET_IS_ME,
-} from "../../redux/actions";
+import Topbar from "../../components/topbar/Topbar";
+import UpdateImage from "../../components/UpdateImage/UpdateImage.jsx";
+import { PUBLIC_FOLDER } from "../../contants";
 import { imageUpload, removeImage } from "../../helpers/image";
-import { NO_BACKGROUND } from "../../contants/imgContant";
+import {
+  SET_IS_ME,
+  SET_USER_PROFILE,
+  UPDATE_AVATAR_USER,
+  UPDATE_BACKGROUND_USER,
+} from "../../redux/actions";
+import "./profile.scss";
+import ProflieLeft from "./ProfileLeft";
+import ProfileRight from "./ProfileRight";
 
 export default function Profile() {
   const { id } = useParams();
 
   const { userCurrent } = useSelector((state) => state.auth);
   const { userProfile } = useSelector((state) => state.profile);
- 
 
   const idBgc = useRef(uuidv4());
   const idAvatar = useRef(uuidv4());
@@ -107,7 +102,7 @@ export default function Profile() {
             backgroundImage: `url(${
               (userProfile?.coverPicture?.length &&
                 userProfile?.coverPicture[0]) ||
-              NO_BACKGROUND
+              PUBLIC_FOLDER + "no-backgound.jpg"
             })`,
           }}
         >
@@ -126,13 +121,9 @@ export default function Profile() {
             />
           )}
         </div>
-        {/* <hr className="separator" /> */}
 
         <hr className="separator separator--line" />
 
-        {/* <hr className="separator separator--dots" /> */}
-
-        {/* <hr className="separator separator--dotter" /> */}
         <main>
           <div className="row">
             <ProflieLeft idAvatar={idAvatar} />

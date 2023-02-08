@@ -1,19 +1,22 @@
-import { SET_PEER, SET_USER_PROFILE, SET_IS_ME } from "../actions";
+import { SET_PEER, USER_LOGOUT } from "../actions";
 
 const initialState = null;
 
 const peerReducer = (state = initialState, action) => {
-  const { type, payload } = action;
+    const { type, payload } = action;
 
-  switch (type) {
-    case SET_PEER: {
-      return payload;
-    }
+    switch (type) {
+        case SET_PEER: {
+            return payload;
+        }
 
-    default: {
-      return state;
+        case USER_LOGOUT: {
+            return null;
+        }
+        default: {
+            return state;
+        }
     }
-  }
 };
 
 export default peerReducer;

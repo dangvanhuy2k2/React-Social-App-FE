@@ -1,22 +1,23 @@
-import { Routes, Route } from "react-router-dom";
-import { Fragment, useEffect } from "react";
-import { io } from "socket.io-client";
 import Peer from "peerjs";
+import { Fragment, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Route, Routes } from "react-router-dom";
+import { io } from "socket.io-client";
+import ModalCall from "./components/modalCall/ModalCall";
+import { SOCKET_SERVER } from "./contants";
 import {
     ADD_FRIEND,
     ADD_USER_ONLINE,
     REMOVE_FRIEND,
     REMOVE_USER_OFFLINE,
     SET_CALL,
+    SET_ELEMENT_CLICK,
     SET_PEER,
     SET_SOCKET,
-    SET_USERS_ONLINE,
+    SET_USERS_ONLINE
 } from "./redux/actions";
-import { useDispatch, useSelector } from "react-redux";
-import ModalCall from "./components/modalCall/ModalCall";
+import { privateRoutes, publicRoutes } from "./routes";
 
-import { publicRoutes, privateRoutes } from "./routes";
-import { URL_SOCKET } from "./contants";
 
 function App() {
     const { firstConnect, socket, firstGetData, usersOnline } = useSelector(
@@ -24,9 +25,21 @@ function App() {
     );
 
     const { userCurrent } = useSelector((state) => state.auth);
-    const { isCall, isInvited } = useSelector((state) => state.call);
+    const { isCall } = useSelector((state) => state.call);
 
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        const handleClick = (e) => {
+            dispatch({
+                type: SET_ELEMENT_CLICK,
+                payload: { elClick: e.target }
+            })
+        }
+        window.addEventListener("click", handleClick);
+
+        return () => window.removeEventListener("click", handleClick);
+    }, []);
 
     useEffect(() => {
         if (!socket) return;
@@ -121,15 +134,8 @@ function App() {
     }, [socket]);
 
     useEffect(() => {
-        if (firstConnect && userCurrent) {
-            dispatch({
-                type: SET_SOCKET,
-                payload: io(URL_SOCKET),
-            });
-        }
-    }, [userCurrent]);
+        if (!userCurrent) return;
 
-    useEffect(() => {
         const handleSetUserOnline = (allUser) => {
             if (!firstGetData) return;
             const usersFollowOnline = userCurrent?.followings.filter((followingiD) =>
@@ -141,20 +147,25 @@ function App() {
                 payload: usersFollowOnline,
             });
         };
+        const socket = io(SOCKET_SERVER);
 
-        if (socket) {
-            socket.emit("userLogin", {
-                userId: userCurrent?._id,
-                friends: userCurrent?.friends,
-                userName: userCurrent?.userName,
-            });
-            socket.on("getUsers", handleSetUserOnline);
-        }
+        socket.emit("userLogin", {
+            userId: userCurrent?._id,
+            friends: userCurrent?.friends,
+            userName: userCurrent?.userName,
+        });
+        socket.on("getUsers", handleSetUserOnline);
 
+        dispatch({
+            type: SET_SOCKET,
+            payload: socket
+        });
         return () => {
             socket?.off("getUsers", handleSetUserOnline);
         };
-    }, [socket, firstGetData]);
+    }, [userCurrent]);
+
+
 
     return (
         <>

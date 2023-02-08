@@ -1,6 +1,6 @@
+import { Cancel } from "@material-ui/icons";
 import React from "react";
 import "./displayImg.css";
-import { Cancel } from "@material-ui/icons";
 
 const Displayimg = ({ image, file, setImages, setFiles }) => {
   return (

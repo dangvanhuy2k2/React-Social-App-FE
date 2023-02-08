@@ -1,12 +1,12 @@
 import { Notifications } from "@material-ui/icons";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getDataAPI } from "../../api/fetchData";
 import {
-  SET_SHOW_NOTIFICATION,
+  INCREASE_NUMBER_NOTIFICATION_UNREAD,
   SET_LIST_NOTIFICATION,
   SET_NUMBER_NOTIFICATION_UNREAD,
-  INCREASE_NUMBER_NOTIFICATION_UNREAD,
+  SET_SHOW_NOTIFICATION,
 } from "../../redux/actions";
 import Notification from "../notification/Notification";
 import "./iconNotification.scss";
@@ -16,7 +16,17 @@ const IconNotification = () => {
   const { userCurrent } = useSelector((state) => state.auth);
   const { socket } = useSelector((state) => state.network);
 
+  const { elClick } = useSelector((state) => state.global);
   const dispatch = useDispatch();
+
+  const notifyRef = useRef();
+  useEffect(() => {
+    if (notifyRef.current.contains(elClick)) return;
+    dispatch({
+      type: SET_SHOW_NOTIFICATION,
+      payload: false,
+    });
+  }, [elClick]);
 
   useEffect(() => {
     if (!socket) return;
@@ -106,7 +116,7 @@ const IconNotification = () => {
   };
 
   return (
-    <>
+    <div ref={notifyRef}>
       <Notifications
         className="svg-notification"
         style={{
@@ -117,14 +127,8 @@ const IconNotification = () => {
       <span className="topbarIconBadge">{number}</span>
       <div className="my-btn-border-notification"></div>
       <div className="my-btn-1"></div>
-      {/* <div className="my-btn" onClick={toogleNotification}>
-        <div className="my-btn-border"></div>
-        <i className="fas fa-bell btn-bell"></i>
-        <span className="topbarIconBadge">{number}</span>
-      </div> */}
-
       {isShow && <Notification />}
-    </>
+    </div>
   );
 };
 

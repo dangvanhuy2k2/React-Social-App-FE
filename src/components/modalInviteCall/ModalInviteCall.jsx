@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import "./modalInviteCall.scss";
-import Avatar from "../avatar/Avatar";
 import {
   REFUSE_INVITE,
   SET_IS_ANSWER,
   SET_USER_STREAM,
 } from "../../redux/actions";
+import Avatar from "../avatar/Avatar";
+import "./modalInviteCall.scss";
 
 import { addVideoStream, openStream } from "../../helpers/media";
+import MessagePretty from "../MessagePretty/MessagePretty";
 
 const ModalInviteCall = () => {
   const { userSendCall } = useSelector((state) => state.call);
@@ -17,14 +18,9 @@ const ModalInviteCall = () => {
   const { userCurrent } = useSelector((state) => state.auth);
   const { socket } = useSelector((state) => state.network);
   const peer = useSelector((state) => state.peer);
-  const {
-    isAnswer,
-    roomCallId,
-    isVideo,
-    isCreate,
-    userStream,
-    conversationId,
-  } = useSelector((state) => state.call);
+  const { isAnswer, roomCallId, isVideo, conversationId } = useSelector(
+    (state) => state.call
+  );
 
   const dispatch = useDispatch();
 
@@ -83,9 +79,9 @@ const ModalInviteCall = () => {
       </span>
       <div className="info">
         <Avatar user={userSendCall} link={false} isStatus={false} />
-        <div className="noMes">
-          {`${userSendCall?.userName} Invited you to join the call`}
-        </div>
+        <MessagePretty
+          mess={`${userSendCall?.userName} Invited you to join the call`}
+        />
       </div>
       <div className="buttons">
         <button

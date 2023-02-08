@@ -1,21 +1,18 @@
-import React, { useState, useEffect } from "react";
-import DisplayNotification from "./DisplayNotification";
-import "./notification.scss";
-import { debounce } from "../../helpers/debounceFunction";
-import { toast } from "react-toastify";
-import { putDataAPI, deleteDataAPI } from "../../api/fetchData";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   ADD_NOTIFICATION,
   ADD_NOTIFICATION_DISPLAY,
   SET_SHOW_NOTIFICATION_MENU,
 } from "../../redux/actions";
+import DisplayNotification from "./DisplayNotification";
 import MenuNotifycation from "./MenuNotifycation";
+import "./notification.scss";
 
 const Notification = () => {
-  const { userCurrent } = useSelector((state) => state.auth);
-  const { type, listNotifycation, notificationDisplays, isShowMenu } =
-    useSelector((state) => state.notification);
+  const { type, notificationDisplays, isShowMenu } = useSelector(
+    (state) => state.notification
+  );
   const { socket } = useSelector((state) => state.network);
 
   const dispatch = useDispatch();

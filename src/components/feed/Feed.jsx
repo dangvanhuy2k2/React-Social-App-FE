@@ -1,17 +1,25 @@
+import { CircularProgress } from "@material-ui/core";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { getDataAPI } from "../../api/fetchData";
+import { LOADING_POST_END, UPDATE_INFO_GET_POST } from "../../redux/actions";
+import MessagePretty from "../MessagePretty/MessagePretty";
 import Post from "../post/Post";
 import Share from "../share/Share";
-import "./feed.css";
-import { useState, useEffect } from "react";
-import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
-import { getDataAPI } from "../../api/fetchData";
+import "./feed.scss";
+import GetMorePost from "./GetMorePost";
 
 export default function Feed({ userName }) {
   const [posts, setPosts] = useState([]);
 
   const { socket } = useSelector((state) => state.network);
+  const { limit, skip, isLoadingPost, isMaxPost } = useSelector(
+    (state) => state.post
+  );
 
-  const { userCurrent, accessToken } = useSelector((state) => state.auth);
+  const { userCurrent } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const handleUpdateFeed = ({ post, type, message }) => {
@@ -42,26 +50,32 @@ export default function Feed({ userName }) {
 
     const fetchPosts = async () => {
       try {
-        if (userName || userCurrent?._id) {
-          const response = userName
-            ? await getDataAPI(`/post/profile/${userName}`)
-            : await getDataAPI(`/post/get-all-post/${userCurrent?._id}`);
+        const response = await getDataAPI(
+          `/post/get-feed-post?limit=${limit}&skip=${skip}`
+        );
 
-          const { posts } = response;
-          if (isMount) {
-            setPosts(
-              posts.sort(
-                (p1, p2) => new Date(p2.createdAt) - new Date(p1.createdAt)
-              )
-            );
-          }
+        const { posts: newPosts } = response;
+        if (!newPosts.length) {
+          dispatch({
+            type: UPDATE_INFO_GET_POST,
+            payload: { isMaxPost: true },
+          });
+          return;
         }
-      } catch (err) {}
+        if (!isMount) return;
+        setPosts([...posts, ...newPosts]);
+      } catch (err) {
+        console.log("get post feed", err);
+      } finally {
+        dispatch({
+          type: LOADING_POST_END,
+        });
+      }
     };
     fetchPosts();
 
     return () => (isMount = false);
-  }, [userName, userCurrent?._id]);
+  }, [limit, skip]);
 
   return (
     <div className="feedWrapper">
@@ -71,6 +85,16 @@ export default function Feed({ userName }) {
       {posts.map((p) => (
         <Post setPosts={setPosts} key={p._id} post={p} />
       ))}
+
+      {isLoadingPost ? (
+        <div className="loadingPost">
+          <CircularProgress color="primary" />
+        </div>
+      ) : !isMaxPost ? (
+        <GetMorePost postsLength={posts.length} limit={limit} />
+      ) : (
+        <MessagePretty mess={"Make friends to see more posts"} />
+      )}
     </div>
   );
 }

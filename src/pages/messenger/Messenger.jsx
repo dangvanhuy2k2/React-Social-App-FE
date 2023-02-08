@@ -1,20 +1,19 @@
 import "./messenger.scss";
 
-import { useEffect, useRef, useState } from "react";
-import { getDataAPI, postDataAPI } from "../../api/fetchData";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { getDataAPI, postDataAPI } from "../../api/fetchData";
 
 import Conversation from "../../components/conversation/Conversation";
+import ModalCreateRoomChat from "../../components/ModalCreateRoomChat/ModalCreateRoomChat";
 import ChatRoom from "./ChatRoom";
 import OptionsMessage from "./OptionsMessage";
-import ModalCreateRoomChat from "../../components/ModalCreateRoomChat/ModalCreateRoomChat";
 
-import {
-  SET_LIST_CONVERSATION,
-  SET_CONVERSATION_CHAT,
-} from "../../redux/actions/chatActions";
-import { toast } from "react-toastify";
 import { SET_CREATE_ROOM } from "../../redux/actions";
+import {
+  SET_CONVERSATION_CHAT,
+  SET_LIST_CONVERSATION,
+} from "../../redux/actions/chatActions";
 
 export default function Messenger() {
   const [conversationDisplays, setConversationDisplays] = useState([]);
@@ -23,7 +22,6 @@ export default function Messenger() {
   const { isCreate } = useSelector((state) => state.createRoomChat);
   const { conversationChat, listConversation, isShowConversationPending } =
     useSelector((state) => state.chat);
-
   const dispatch = useDispatch();
 
   useEffect(() => {

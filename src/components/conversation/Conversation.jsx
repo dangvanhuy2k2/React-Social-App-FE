@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import Avatar from "../avatar/Avatar";
-import { getDataAPI } from "../../api/fetchData";
-import { NO_AVATAR } from "../../contants/imgContant";
-import { UPDATE_CONVERSATION } from "../../redux/actions";
 import { v4 as uuidv4 } from "uuid";
+import { getDataAPI } from "../../api/fetchData";
+import { PUBLIC_FOLDER } from "../../contants";
+import { UPDATE_CONVERSATION } from "../../redux/actions";
 
 export default function Conversation({ conversation }) {
   const {
@@ -167,7 +165,7 @@ export default function Conversation({ conversation }) {
         }
 
         return {
-          src: img && img.length ? img[0] : NO_AVATAR,
+          src: img && img.length ? img[0] : PUBLIC_FOLDER + "no-avatar.png",
           key: uuidv4(),
         };
       });
@@ -175,7 +173,9 @@ export default function Conversation({ conversation }) {
       const { profilePicture } = listMembers[0];
 
       listImages.push({
-        src: profilePicture.length ? profilePicture[0] : NO_AVATAR,
+        src: profilePicture.length
+          ? profilePicture[0]
+          : PUBLIC_FOLDER + "no-avatar.png",
         key: uuidv4(),
       });
     }

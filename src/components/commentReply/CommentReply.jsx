@@ -1,13 +1,13 @@
-import "./commentReply.css";
-import React, { useEffect, useState, useRef } from "react";
-import * as timeago from "timeago.js";
-import { toast } from "react-toastify";
-import Avatar from "../avatar/Avatar";
-import CommentInfo from "../comment/CommentInfo";
-import CommentCrud from "../comment/CommentCrud";
-import ModalConfirmDelete from "../modal/ModalConfirmDelete";
-import { getDataAPI, putDataAPI, deleteDataAPI } from "../../api/fetchData";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import * as timeago from "timeago.js";
+import { deleteDataAPI, getDataAPI, putDataAPI } from "../../api/fetchData";
+import Avatar from "../avatar/Avatar";
+import CommentCrud from "../comment/CommentCrud";
+import CommentInfo from "../comment/CommentInfo";
+import ModalConfirmDelete from "../modal/ModalConfirmDelete";
+import "./commentReply.css";
 
 function CommentReply({ comment, commentReply, setCommentsReply }) {
   const [like, setLike] = useState();

@@ -1,25 +1,24 @@
-import "./comment.css";
-import React, { useEffect, useState
-  , useRef } from "react";
-import * as timeago from "timeago.js";
+import React, { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import * as timeago from "timeago.js";
+import { v4 as uuidv4 } from "uuid";
+import { getDataAPI, postDataAPI, putDataAPI } from "../../api/fetchData";
+import { imageUpload } from "../../helpers/image";
+import { UPDATE_ID_COMMENT } from "../../redux/actions";
+import Avatar from "../avatar/Avatar";
 import CommentReply from "../commentReply/CommentReply";
-import ModalConfirmDelete from "../modal/ModalConfirmDelete";
 import CreateComment from "../form/createComment/CreateComment";
+import ModalConfirmDelete from "../modal/ModalConfirmDelete";
+import "./comment.css";
 import CommentCrud from "./CommentCrud";
 import CommentInfo from "./CommentInfo";
-import Avatar from "../avatar/Avatar";
-import { v4 as uuidv4 } from "uuid";
-import { useSelector } from "react-redux";
-import { getDataAPI, putDataAPI, postDataAPI } from "../../api/fetchData";
-import { imageUpload } from "../../helpers/image";
 
 function Comment({ comment, post, setComments }) {
   const [like, setLike] = useState();
   const [user, setUser] = useState({});
   const [isShowCommentsReply, setIsShowCommentsReply] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
-  const [isComment, setIsComment] = useState(false);
   const [commentsReply, setCommentsReply] = useState([]);
   const [isCrudComment, setIsCrudComment] = useState(false);
   const [files, setFiles] = useState([]);
@@ -27,6 +26,7 @@ function Comment({ comment, post, setComments }) {
 
   const { socket } = useSelector((state) => state.network);
   const { userCurrent } = useSelector((state) => state.auth);
+  const { idComment } = useSelector((state) => state.comment);
 
   const idCreateComment = useRef(uuidv4());
 
@@ -46,6 +46,8 @@ function Comment({ comment, post, setComments }) {
     setLike(comment?.likes.length);
     setIsLiked(comment?.likes.includes(userCurrent._id));
   }, [comment?.likes, userCurrent?._id]);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     let isMount = true;
@@ -217,7 +219,12 @@ function Comment({ comment, post, setComments }) {
           <span
             className="reply"
             onClick={() => {
-              setIsComment(!isComment);
+              let newIdComment = comment?._id;
+              if (idComment === comment?._id) newIdComment = null;
+              dispatch({
+                type: UPDATE_ID_COMMENT,
+                payload: { idComment: newIdComment },
+              });
             }}
           >
             Reply
@@ -236,7 +243,7 @@ function Comment({ comment, post, setComments }) {
         </div>
 
         <div className="comentBottom">
-          {isComment && (
+          {idComment === comment?._id && (
             <CreateComment
               id={idCreateComment.current}
               files={files}

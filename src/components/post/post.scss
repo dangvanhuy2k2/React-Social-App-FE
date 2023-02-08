@@ -79,10 +79,15 @@
 }
 
 .likeIcon {
-  width: 24px;
-  height: 24px;
+  font-size: 24px;
+  display: block;
   margin-right: 5px;
   cursor: pointer;
+  text-align: center;
+
+  &.has-like {
+    color: red;
+  }
 }
 
 .postLikeCounter {
@@ -96,11 +101,13 @@
 }
 .postBottomRight {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
 }
 
 .postCommentIcon {
-  margin-right: 5px;
+  display: block;
+  font-size: 24px;
+  margin: 0 5px;
   cursor: pointer;
 }
 

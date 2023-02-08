@@ -1,24 +1,19 @@
 import React from "react";
+import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import { putDataAPI, deleteDataAPI } from "../../api/fetchData";
-import { useDispatch, useSelector } from "react-redux";
-import "./notificationAction.scss";
+import { deleteDataAPI, putDataAPI } from "../../api/fetchData";
 import {
-  REMOVE_FRIEND_REQUEST,
   REMOVE_NOTIFICATION,
   UPDATE_LIST_CONVERSATION,
 } from "../../redux/actions";
+import "./notificationAction.scss";
 
 const NotificationAction = ({ notification }) => {
-  const { userCurrent } = useSelector((state) => state.auth);
-
   const dispatch = useDispatch();
 
   const handleRemoveNotification = async () => {
     try {
-      const response = await deleteDataAPI(
-        `/notification/${notification._id}`
-      );
+      const response = await deleteDataAPI(`/notification/${notification._id}`);
 
       const { message } = response;
 

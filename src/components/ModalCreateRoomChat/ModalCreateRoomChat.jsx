@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import "./ModalCreateRoomChat.scss";
-import { NO_AVATAR } from "../../contants/imgContant";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { getDataAPI, postDataAPI } from "../../api/fetchData";
+import { imageUpload } from "../../helpers/image";
 import {
   ADD_CONVERSATION,
   ADD_FRIEND_TO_ROOM,
@@ -8,11 +10,8 @@ import {
   RESET_CREATE_ROOM,
   SET_LIST_FRIEND,
 } from "../../redux/actions";
-import { useSelector, useDispatch } from "react-redux";
-import { getDataAPI, postDataAPI } from "../../api/fetchData";
 import Avatar from "../avatar/Avatar";
-import { imageUpload } from "../../helpers/image";
-import { toast } from "react-toastify";
+import "./ModalCreateRoomChat.scss";
 
 const ModalCreateRoomChat = () => {
   const [file, setFile] = useState();

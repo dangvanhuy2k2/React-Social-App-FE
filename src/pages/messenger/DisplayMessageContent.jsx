@@ -19,8 +19,8 @@ const DisplayMessageContent = ({ message }) => {
     }
 
     setUser({
-      profilePicture: userSend.profilePicture,
-      userName: userSend.userName,
+      profilePicture: userSend?.profilePicture,
+      userName: userSend?.userName,
     });
   }, [message, listMembers, userCurrent]);
 

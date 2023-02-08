@@ -1,31 +1,28 @@
-import "./post.css";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 import * as timeago from "timeago.js";
-import { STORE_IMG } from "../../contants/imgContant";
+import { v4 as uuidv4 } from "uuid";
+import {
+  deleteDataAPI,
+  getDataAPI,
+  postDataAPI,
+  putDataAPI,
+} from "../../api/fetchData";
+import { debounce } from "../../helpers/debounceFunction";
+import { imageUpload } from "../../helpers/image";
+import { UPDATE_ID_COMMENT } from "../../redux/actions";
+import Avatar from "../avatar/Avatar";
 import Comment from "../comment/Comment";
 import CreateComment from "../form/createComment/CreateComment";
-import CrudPost from "./CrudPost";
-import Avatar from "../avatar/Avatar";
-import ModalEditPost from "../modal/ModalEditPost";
 import ModalConfirmDelete from "../modal/ModalConfirmDelete";
-import { toast } from "react-toastify";
-import { v4 as uuidv4 } from "uuid";
-import { debounce } from "../../helpers/debounceFunction";
-import { useSelector } from "react-redux";
-import {
-  getDataAPI,
-  putDataAPI,
-  postDataAPI,
-  deleteDataAPI,
-} from "../../api/fetchData";
-import { imageUpload } from "../../helpers/image";
-import useCheckOnline from "../../hooks/useCheckOnline";
-
+import ModalEditPost from "../modal/ModalEditPost";
+import CrudPost from "./CrudPost";
+import "./post.scss";
 export default function Post({ post, setPosts, className }) {
   const [like, setLike] = useState(post?.likes.length);
   const [isLiked, setIsLiked] = useState(false);
   const [user, setUser] = useState({});
-  const [isComment, setIsComment] = useState(false);
   const [comments, setComments] = useState([]);
   const [isShowComment, setIsShowComment] = useState(false);
   const [isCrudPost, setIsCrudPost] = useState(false);
@@ -34,8 +31,10 @@ export default function Post({ post, setPosts, className }) {
 
   const { socket } = useSelector((state) => state.network);
   const { userCurrent } = useSelector((state) => state.auth);
+  const { idComment, idPostOpen } = useSelector((state) => state.comment);
 
   const idCreateComment = useRef(uuidv4());
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const handleCheckClick = (e) => {
@@ -50,7 +49,7 @@ export default function Post({ post, setPosts, className }) {
   }, [isCrudPost]);
 
   useEffect(() => {
-    setIsLiked(post?.likes.includes(userCurrent._id));
+    setIsLiked(post?.likes.includes(userCurrent?._id));
     setLike(post?.likes.length);
   }, [post?.likes, userCurrent?._id]);
 
@@ -60,11 +59,9 @@ export default function Post({ post, setPosts, className }) {
       try {
         const response = await getDataAPI(`/post/get-all-comment/${post?._id}`);
 
-        const { message, comments } = response;
+        const { comments } = response;
 
         if (isMount) setComments(comments);
-
-        // toast.success(message, { autoClose: 2000 });
       } catch (err) {
         console.log("err", err);
       }
@@ -104,7 +101,7 @@ export default function Post({ post, setPosts, className }) {
       setLike((prev) => (type === "like" ? prev + 1 : prev - 1));
     };
 
-    const handleUpdateCmtPost = ({ message, postId, type, comment }) => {
+    const handleUpdateCmtPost = ({ postId, type, comment }) => {
       if (post?._id !== postId) return;
 
       setComments((prev) =>
@@ -197,13 +194,6 @@ export default function Post({ post, setPosts, className }) {
 
       socket?.emit("createNotification", { notification });
 
-      // socket?.emit("commentPostHandler", {
-      //   comment,
-      //   postId: post?._id,
-      //   userPost: post.userId,
-      //   message: userCurrent?.userName + " commented on your post",
-      // });
-
       setComments((prev) => [comment, ...prev]);
       setFiles([]);
     } catch (err) {
@@ -290,41 +280,49 @@ export default function Post({ post, setPosts, className }) {
           </div>
           <div className="postBottom">
             <div className="postBottomLeft">
-              <img
-                className="likeIcon"
-                src={`${STORE_IMG}/like.png`}
+              <i
+                className={`bx ${
+                  isLiked ? "bxs-heart has-like" : "bx-heart"
+                } likeIcon`}
                 onClick={debounce(likeHandler, 2000)}
-                alt=""
-              />
-              <img
-                className="likeIcon"
-                src={`${STORE_IMG}/heart.png`}
-                onClick={debounce(likeHandler, 2000)}
-                alt=""
-              />
+              ></i>
               <span className="postLikeCounter">{like} people like it</span>
             </div>
             <div
               className="postBottomRight"
               onClick={() => {
+                let newIdComment = post?._id;
+                let newIdPostOpen = post?._id;
+                if (idPostOpen === post?._id) {
+                  newIdPostOpen = null;
+                  newIdComment = null;
+                }
+                dispatch({
+                  type: UPDATE_ID_COMMENT,
+                  payload: {
+                    idComment: newIdComment,
+                    idPostOpen: newIdPostOpen,
+                  },
+                });
                 setIsShowComment(!isShowComment);
-                setIsComment(!isComment);
               }}
             >
-              <span className="postCommentIcon">
-                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAIdJREFUSEvtlcENgCAMRR+TqJs4ik6mbuIoOommRpKGoB5aPMGV9n36IZ9A4RUK89ECPTABrVF0A0ZgFY4WkI3GCI/twupSgcMJHjHX4fUEVSB1uFr0+eaqRdWiTwdeC/aYyiWySOBDLq512C13kW2OhzR1g+fi2hWeCsxetmhff/30zReaA5yXYh0Zr3VkxgAAAABJRU5ErkJggg==" />
-              </span>
-              <span className="postCommentText">comments</span>
+              {comments.length ? (
+                <span className="postCommentText">{comments.length}</span>
+              ) : (
+                ""
+              )}
+              <i className="bx bx-comment postCommentIcon"></i>
             </div>
           </div>
 
           <div className="commentContainer">
-            {isComment && (
+            {idComment === post?._id && (
               <CreateComment
                 id={idCreateComment.current}
                 files={files}
                 setFiles={setFiles}
-                user={user}
+                user={userCurrent}
                 onCreateComment={handleCreateComment}
               />
             )}

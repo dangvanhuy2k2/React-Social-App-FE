@@ -1,20 +1,20 @@
-import "./sidebar.css";
 import {
-  RssFeed,
-  Chat,
-  PlayCircleFilledOutlined,
-  Group,
   Bookmark,
-  HelpOutline,
-  WorkOutline,
+  Chat,
   Event,
+  Group,
+  HelpOutline,
+  PlayCircleFilledOutlined,
+  RssFeed,
   School,
+  WorkOutline,
 } from "@material-ui/icons";
-import UserSuggestion from "../userSuggestion/UserSuggestion";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getDataAPI } from "../../api/fetchData";
 import { SET_CHAT } from "../../redux/actions";
+import UserSuggestion from "../userSuggestion/UserSuggestion";
+import "./sidebar.css";
 
 export default function Sidebar() {
   const [usersSuggestion, setUsersSuggestion] = useState([]);
@@ -32,9 +32,7 @@ export default function Sidebar() {
           const response = await getDataAPI(
             `/user/get-users-suggestion/${userCurrent?._id}`
           );
-          const { message, users } = response;
-
-          // toast.success(message, { autoClose: 2000 });
+          const { users } = response;
           if (isMount) {
             setUsersSuggestion(users);
           }

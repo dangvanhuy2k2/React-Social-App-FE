@@ -1,9 +1,9 @@
-import "./login.css";
-import { useRef, useEffect } from "react";
-import { login } from "../../api/authApi";
 import { CircularProgress } from "@material-ui/core";
-import { useNavigate } from "react-router-dom";
+import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { login } from "../../api/authApi";
+import "./login.css";
 
 export default function Login() {
   const userNameRef = useRef();
@@ -11,7 +11,6 @@ export default function Login() {
 
   const navigate = useNavigate();
 
-  // const { user, isLoading, error, dispatch } = useSelector((state) => state.network);
   const dispatch = useDispatch();
 
   const { isLoading } = useSelector((state) => state.auth);

@@ -1,20 +1,19 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { NO_AVATAR, STORE_IMG } from "../../contants/imgContant";
-import { END_CALL, SET_IS_ANSWER, SET_USER_STREAM } from "../../redux/actions";
-
-import "./modalCall.scss";
-import NavModalCall from "./NavModalCall";
-import InviteFriend from "./InviteFriend";
-import ModalInviteCall from "../modalInviteCall/ModalInviteCall";
-import ModalCreateCall from "../modalCreateCall/ModalCreateCall";
+import { PUBLIC_FOLDER } from "../../contants";
 import {
   addVideoStream,
+  findStream,
   handleUpdateUserCamera,
   openStream,
-  findStream,
 } from "../../helpers/media";
+import { END_CALL, SET_IS_ANSWER, SET_USER_STREAM } from "../../redux/actions";
+import ModalCreateCall from "../modalCreateCall/ModalCreateCall";
+import ModalInviteCall from "../modalInviteCall/ModalInviteCall";
+import InviteFriend from "./InviteFriend";
+import "./modalCall.scss";
+import NavModalCall from "./NavModalCall";
 
 const CallModal = () => {
   const [hours, setHours] = useState(0);
@@ -39,7 +38,6 @@ const CallModal = () => {
   const { socket } = useSelector((state) => state.network);
   const peer = useSelector((state) => state.peer);
   const { userCurrent } = useSelector((state) => state.auth);
-  console.log(peer, socket);
   const dispatch = useDispatch();
 
   // Set Time
@@ -218,7 +216,7 @@ const CallModal = () => {
       if (type === "video") {
         data.img = userCurrent?.profilePicture.length
           ? userCurrent?.profilePicture[0]
-          : NO_AVATAR;
+          : PUBLIC_FOLDER + "no-avatar.png";
       }
 
       track.enabled = false;
@@ -257,8 +255,8 @@ const CallModal = () => {
 
         <div className="container">
           <div className="top-icons">
-            <img src={STORE_IMG + "search.png"} alt="" />
-            <img src={STORE_IMG + "menu.png"} alt="" />
+            <img src={PUBLIC_FOLDER + "search.png"} alt="" />
+            <img src={PUBLIC_FOLDER + "menu.png"} alt="" />
           </div>
           <div className="video_layout">
             <div className="content_left">
@@ -274,7 +272,7 @@ const CallModal = () => {
               </div>
               <div className="controls">
                 <div className="icon-control">
-                  <img src={STORE_IMG + "chat.png"} alt="" />
+                  <img src={PUBLIC_FOLDER + "chat.png"} alt="" />
                 </div>
 
                 <div
@@ -292,7 +290,7 @@ const CallModal = () => {
                 </div>
                 <div className="icon-control">
                   <img
-                    src={STORE_IMG + "call.png"}
+                    src={PUBLIC_FOLDER + "call.png"}
                     alt=""
                     className="call-icon"
                     onClick={endCall}
@@ -306,13 +304,13 @@ const CallModal = () => {
                   }}
                 >
                   {isMic ? (
-                    <img src={STORE_IMG + "mic.png"} alt="" />
+                    <img src={PUBLIC_FOLDER + "mic.png"} alt="" />
                   ) : (
                     <i className="fa-solid fa-microphone-slash"></i>
                   )}
                 </div>
                 <div className="icon-control">
-                  <img src={STORE_IMG + "cast.png"} alt="" />
+                  <img src={PUBLIC_FOLDER + "cast.png"} alt="" />
                 </div>
               </div>
             </div>
