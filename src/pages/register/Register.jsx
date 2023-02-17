@@ -1,7 +1,7 @@
 import { CircularProgress } from "@material-ui/core";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { register } from "../../api/authApi";
 import ShowError from "../../components/ShowError/ShowError";
@@ -30,6 +30,7 @@ export default function Register() {
 
   const handleRegister = (e) => {
     e.preventDefault();
+    if (isLoading) return;
     let isValid = true;
 
     let newErrors = { ...errors };
@@ -123,21 +124,26 @@ export default function Register() {
             <button className="registerButton">
               {isLoading ? <CircularProgress color={"primary"} /> : "Register"}
             </button>
-            <Link
-              to={"/login"}
+            <div
               style={{
                 display: "flex",
                 justifyContent: "center",
               }}
             >
-              <button className="redirectButton">
+              <button
+                className="redirectButton"
+                onClick={() => {
+                  if (isLoading) return;
+                  navigate("/login");
+                }}
+              >
                 {isLoading ? (
                   <CircularProgress color={"primary"} />
                 ) : (
                   "Log into Account"
                 )}
               </button>
-            </Link>
+            </div>
           </form>
         </div>
       </div>

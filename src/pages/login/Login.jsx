@@ -17,6 +17,7 @@ export default function Login() {
 
   const handleLogin = (e) => {
     e.preventDefault();
+    if (isLoading) return;
     dispatch(
       login(
         {
@@ -64,7 +65,10 @@ export default function Login() {
             <span className="loginForgot">Forgot Password?</span>
             <button
               className="loginRegisterButton"
-              onClick={() => navigate("/register")}
+              onClick={() => {
+                if (isLoading) return;
+                navigate("/register");
+              }}
             >
               {isLoading ? (
                 <CircularProgress color={"primary"} size="30px" />
