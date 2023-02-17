@@ -26,7 +26,7 @@ export const login = (userInfo, navigate) => async (dispatch) => {
 
         navigate("/");
     } catch (err) {
-        const message = err.message || err?.response?.data?.message;
+        const message = err?.response?.data?.message || err.message;
         toast.error(message, { autoClose: 2000 });
 
         dispatch({
@@ -44,7 +44,7 @@ export const register = (userInfo, navigate) => async (dispatch) => {
         await axios.post("/auth/register", userInfo);
         navigate("/login");
     } catch (err) {
-        const message = err.message || err?.response?.data?.message;
+        const message = err?.response?.data?.message || err.message;
         toast.error(message, { autoClose: 2000 });
     }
     finally {
