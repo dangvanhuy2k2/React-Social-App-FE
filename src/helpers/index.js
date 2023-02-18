@@ -38,16 +38,5 @@ export const getLocalStorage = (key) => {
 }
 
 export const setLocalStorage = (key, value) => {
-    console.log(key, value)
     return localStorage.setItem(key, JSON.stringify(value))
 }
-
-/**
- * "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2M2RlNmM3MjcxMGVkYzQ0NzcwYWYzOGUiLCJpYXQiOjE2NzY3MDM3MzUsImV4cCI6MTY3NjcwNzMzNX0.pXjKSL-zJmIZrdJc3KIPP6uls8XuOHxt0dfVx6mqL7o"
- * 
- * eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2M2RlNmM3MjcxMGVkYzQ0NzcwYWYzOGUiLCJpYXQiOjE2NzY3MDM3MzQsImV4cCI6MTY3NjcwNzMzNH0.Mb_d4_Kj1anxPfN2_VglG15T9YIUIrUppxG9A1mbj64
- * 
- * 
- * Mb_d4_Kj1anxPfN2_VglG15T9YIUIrUppxG9A1mbj64
-
- */

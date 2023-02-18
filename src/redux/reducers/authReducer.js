@@ -17,7 +17,7 @@ const authReducer = (state = initialState, action) => {
         case USER_LOGOUT: {
             return {
                 ...initialState,
-                isFirst: state.isFirst
+                isFirst: false
             };
         }
 
