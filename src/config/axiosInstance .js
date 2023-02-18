@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 
 import jwt_decode from "jwt-decode";
 import { ACCESS_TOKEN, REFRESH_TOKEN, URL_BE } from "../contants";
+import { getLocalStorage } from "../helpers";
 
 
 
@@ -20,15 +21,13 @@ const isTimeExpire = (token) => {
     return exp < date.getTime() / 1000
 }
 
-const getToken = (nameToken) => localStorage.getItem(nameToken)
-    ? JSON.parse(localStorage.getItem(nameToken))
-    : "";
+
 
 
 let refreshTokenRequest = null;
 const handleRefreshToken = async () => {
     try {
-        let refreshToken = getToken(REFRESH_TOKEN);
+        let refreshToken = getLocalStorage(REFRESH_TOKEN);
         if (isTimeExpire(refreshToken)) throw new Error("Refresh token invalid");
         const response = await axios.post("/auth/refresh-token", { refreshToken });
         return response;
@@ -39,13 +38,13 @@ const handleRefreshToken = async () => {
 
 instance.interceptors.request.use(
     async (request) => {
-        let accessToken = getToken(ACCESS_TOKEN);
+        let accessToken = getLocalStorage(ACCESS_TOKEN);
 
         if (!accessToken) {
             throw new Error("Please login");
         }
 
-        if (isTimeExpire()) {
+        if (isTimeExpire(accessToken)) {
             try {
                 refreshTokenRequest = refreshTokenRequest
                     ? refreshTokenRequest
@@ -56,7 +55,6 @@ instance.interceptors.request.use(
                 const { newAccessToken } = response.data;
 
                 localStorage.setItem(ACCESS_TOKEN, JSON.stringify(newAccessToken));
-
                 accessToken = newAccessToken;
             } catch (err) {
                 throw new Error("Refresh Token failed");

@@ -1,16 +1,17 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 import { ACCESS_TOKEN, REFRESH_TOKEN, URL_BE } from "../contants";
+import { setLocalStorage } from "../helpers";
 import { LOADING_END, LOADING_START, LOGIN_FAILED, LOGIN_SUCCESS } from "../redux/actions";
 
 axios.defaults.baseURL = URL_BE + "v1/api";
 
 
 export const login = (userInfo, navigate) => async (dispatch) => {
-    dispatch({
-        type: LOADING_START,
-    });
     try {
+        dispatch({
+            type: LOADING_START,
+        });
         const response = await axios.post("/auth/login", userInfo);
         const { user, message, accessToken, refreshToken } = response.data;
 
@@ -21,8 +22,8 @@ export const login = (userInfo, navigate) => async (dispatch) => {
             payload: user,
         });
 
-        localStorage.setItem(ACCESS_TOKEN, JSON.stringify(accessToken));
-        localStorage.setItem(REFRESH_TOKEN, JSON.stringify(refreshToken));
+        setLocalStorage(ACCESS_TOKEN, accessToken);
+        setLocalStorage(REFRESH_TOKEN, refreshToken);
 
         navigate("/");
     } catch (err) {
@@ -32,6 +33,10 @@ export const login = (userInfo, navigate) => async (dispatch) => {
         dispatch({
             type: LOGIN_FAILED,
             payload: err,
+        });
+    } finally {
+        dispatch({
+            type: LOADING_END,
         });
     }
 };

@@ -115,11 +115,8 @@ export default function Topbar() {
     dispatch({
       type: USER_LOGOUT,
     });
-
-    localStorage.setItem(REFRESH_TOKEN, "");
-    localStorage.setItem(ACCESS_TOKEN, "");
-
-    localStorage.setItem("userId", "");
+    localStorage.removeItem(REFRESH_TOKEN);
+    localStorage.removeItem(ACCESS_TOKEN);
 
     socket?.emit("userLogOut", userCurrent?._id);
     navigate("/login");

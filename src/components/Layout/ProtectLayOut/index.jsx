@@ -1,10 +1,11 @@
+import jwt_decode from "jwt-decode";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getDataAPI } from "../../../api/fetchData";
-import { UPDATE_USER } from "../../../redux/actions";
-import jwt_decode from "jwt-decode";
 import { ACCESS_TOKEN } from "../../../contants";
+import { getLocalStorage } from "../../../helpers";
+import { UPDATE_USER } from "../../../redux/actions";
 
 function ProtectLayOut({ children }) {
   const [isLogin, setIslogin] = useState(false);
@@ -18,9 +19,7 @@ function ProtectLayOut({ children }) {
       setIslogin(true);
       return;
     }
-    const accessToken = localStorage.getItem(ACCESS_TOKEN)
-      ? JSON.parse(localStorage.getItem(ACCESS_TOKEN))
-      : "";
+    const accessToken = getLocalStorage(ACCESS_TOKEN);
     if (!accessToken) return navigate("/login");
     const { exp, userId } = jwt_decode(accessToken);
     const date = new Date();

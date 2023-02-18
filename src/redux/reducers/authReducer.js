@@ -7,6 +7,7 @@ const initialState = {
     userCurrent: null,
     isLoading: false,
     error: null,
+    isFirst: true
 };
 
 const authReducer = (state = initialState, action) => {
@@ -16,6 +17,7 @@ const authReducer = (state = initialState, action) => {
         case USER_LOGOUT: {
             return {
                 ...initialState,
+                isFirst: state.isFirst
             };
         }
 
@@ -30,6 +32,7 @@ const authReducer = (state = initialState, action) => {
             return {
                 ...state,
                 isLoading: false,
+                isFirst: false
             };
         }
         case LOGIN_SUCCESS: {

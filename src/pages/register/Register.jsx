@@ -1,5 +1,5 @@
 import { CircularProgress } from "@material-ui/core";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -19,7 +19,7 @@ const initValue = {
 export default function Register() {
   const [infoRegister, setInfoRegister] = useState({ ...initValue });
   const [errors, setErrors] = useState({ ...initValue });
-  const { isLoading } = useSelector((state) => state.auth);
+  const { isLoading, isFirst } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const handleChangeInput = (e) => {
     const { name, value } = e.target;
@@ -27,6 +27,16 @@ export default function Register() {
     setErrors({ ...errors, [name]: "" });
   };
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isFirst || !isLoading) return;
+    toast.success(
+      "Do lần đầu kết nối nên có thể server phản hồi chậm mong bạn kiên nhẫn chờ đợi trong giây lát",
+      {
+        autoClose: 5000,
+      }
+    );
+  }, [isLoading]);
 
   const handleRegister = (e) => {
     e.preventDefault();

@@ -1,7 +1,8 @@
 import { CircularProgress } from "@material-ui/core";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { login } from "../../api/authApi";
 import "./login.css";
 
@@ -13,8 +14,16 @@ export default function Login() {
 
   const dispatch = useDispatch();
 
-  const { isLoading } = useSelector((state) => state.auth);
-
+  const { isLoading, isFirst } = useSelector((state) => state.auth);
+  useEffect(() => {
+    if (!isFirst || !isLoading) return;
+    toast.success(
+      "Do lần đầu kết nối nên có thể server phản hồi chậm mong bạn kiên nhẫn chờ đợi trong giây lát",
+      {
+        autoClose: 5000,
+      }
+    );
+  }, [isLoading]);
   const handleLogin = (e) => {
     e.preventDefault();
     if (isLoading) return;
